@@ -27,7 +27,7 @@ public class AdminController {
     private final UserService userService;
     private final UserValidator userValidator;
 
-    public AdminController(UserRepository userRepository, RoleRepository roleRepository, UserService userService, UserValidator userValidator) {
+    public AdminController(RoleRepository roleRepository, UserService userService, UserValidator userValidator) {
         this.roleRepository = roleRepository;
         this.userService = userService;
         this.userValidator = userValidator;

@@ -22,7 +22,7 @@ public class UserServiceAndDetailsImpl implements UserService, UserDetailsServic
     private final UserRepository userRepository;
 
     @Autowired
-    public UserServiceAndDetailsImpl(BCryptPasswordEncoder bCryptPasswordEncoder, UserRepository userRepository, RoleRepository roleRepository) {
+    public UserServiceAndDetailsImpl(BCryptPasswordEncoder bCryptPasswordEncoder, UserRepository userRepository) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userRepository = userRepository;
 
