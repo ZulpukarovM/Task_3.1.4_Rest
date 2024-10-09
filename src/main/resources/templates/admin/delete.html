@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:method="post" th:action="@{/admin/delete}">
+    <label for="id">Enter id of User:  </label>
+    <input  type="number" name="id" id="id">
+    <br>
+    <input type="submit" value="Delete">
+    <br>
+</form>
+<br>
+<a href="/logout">logout</a>
+</body>
+</html>

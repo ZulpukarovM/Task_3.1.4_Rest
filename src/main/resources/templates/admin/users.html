@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users List</title>
+</head>
+<body>
+<div>
+  <table border="1">
+    <tr>
+      <th>Name</th>
+      <th>LastName</th>
+      <th>Age</th>
+      <th>Id</th>
+      <th>Update</th>
+    </tr>
+    <tr th:each = "user : ${allUsers}">
+      <td th:utext="${user.getFirstName}">...</td>
+      <td th:utext="${user.getLastName()}">...</td>
+      <td th:utext="${user.getAge()}">...</td>
+      <td th:utext="${user.getId()}">...</td>
+      <td> <a th:href="@{/admin/{id}/update(id=${user.getId()})}">update</a>...</td>
+    </tr>
+  </table>
+  <a href="admin/new">Create</a>
+  <br>
+  <a href="admin/delete">Delete</a>
+  <br>
+  <a href="/logout">logout</a>
+</div>
+</body>
+</html>
