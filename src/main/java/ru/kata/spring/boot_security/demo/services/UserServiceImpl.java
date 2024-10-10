@@ -9,20 +9,20 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.models.User;
-import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
-public class UserServiceAndDetailsImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService, UserDetailsService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final UserRepository userRepository;
 
     @Autowired
-    public UserServiceAndDetailsImpl(BCryptPasswordEncoder bCryptPasswordEncoder, UserRepository userRepository) {
+    public UserServiceImpl(BCryptPasswordEncoder bCryptPasswordEncoder, UserRepository userRepository) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userRepository = userRepository;
 
@@ -31,16 +31,12 @@ public class UserServiceAndDetailsImpl implements UserService, UserDetailsServic
     @Override
     public User getUser(long id) {
 
-        return userRepository.getById(id);
+        return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional
     @Override
     public boolean add(User user) {
-        User userFromDb = userRepository.findByFirstName(user.getUsername());
-        if (userFromDb != null) {
-            return false;
-        }
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return true;
@@ -67,11 +63,8 @@ public class UserServiceAndDetailsImpl implements UserService, UserDetailsServic
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByFirstName(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-        return user;
+
+        return userRepository.findByFirstName(username).orElseThrow(()->new UsernameNotFoundException("User not found"));
     }
 
 

@@ -7,16 +7,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ru.kata.spring.boot_security.demo.services.UserServiceAndDetailsImpl;
+import ru.kata.spring.boot_security.demo.services.UserServiceImpl;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final SuccessUserHandler successUserHandler;
-    private final UserServiceAndDetailsImpl userService;
+    private final UserServiceImpl userService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public WebSecurityConfig(SuccessUserHandler successUserHandler, UserServiceAndDetailsImpl userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public WebSecurityConfig(SuccessUserHandler successUserHandler, UserServiceImpl userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.successUserHandler = successUserHandler;
         this.userService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -40,26 +40,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    protected DaoAuthenticationProvider daoAuthenticationProvider() throws Exception {
+    protected DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setPasswordEncoder(bCryptPasswordEncoder);
         authenticationProvider.setUserDetailsService(userService);
         return authenticationProvider;
     }
-
-
-//    // аутентификация inMemory
-//    @Bean
-//    @Override
-//    public UserDetailsService userDetailsService() {
-//        UserDetails user =
-//                User.withDefaultPasswordEncoder()
-//                        .username("user")
-//                        .password("user")
-//                        .roles("USER")
-//                        .build();
-//
-//        return new InMemoryUserDetailsManager(user);
-//    }
 
 }

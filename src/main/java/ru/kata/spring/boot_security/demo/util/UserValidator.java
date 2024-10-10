@@ -25,7 +25,7 @@ public class UserValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         User user = (User) target;
-        if (userRepository.findByFirstName(user.getFirstName()) != null) {
+        if (userRepository.findByFirstName(user.getFirstName()).isPresent()) {
             errors.rejectValue("firstName", "", "This name is already taken");
         }
     }

@@ -17,6 +17,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Collection;
@@ -36,12 +37,12 @@ public class User implements UserDetails {
     private Long id;
 
 
-    @NotNull(message = "Name should not be empty")
+    @NotEmpty(message = "Name should not be empty")
     @Size(min = 2, message = "Name should be at least 2 characters long")
     @Column(name = "name", unique = true)
     private String firstName;
 
-    @NotNull(message = "lastname should not be empty")
+    @NotEmpty(message = "lastname should not be empty")
     @Size(min = 4, message = "lastname should be at least 4 characters long")
     @Column(name = "last_name")
     private String lastName;
@@ -52,6 +53,8 @@ public class User implements UserDetails {
     private int age;
 
     @Column(name = "password")
+    @NotEmpty(message = "Password is empty")
+
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)

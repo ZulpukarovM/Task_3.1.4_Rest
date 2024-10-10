@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
-import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 import ru.kata.spring.boot_security.demo.services.UserService;
 import ru.kata.spring.boot_security.demo.util.UserValidator;
 
@@ -41,21 +40,21 @@ public class AdminController {
     }
 
 
-    @GetMapping("/new")
-    public String newUser(@ModelAttribute("user") User user, Model model) {
+    @GetMapping("/create")
+    public String createUser(@ModelAttribute("user") User user, Model model) {
 
         List<Role> roles = roleRepository.findAll();
         model.addAttribute("allRoles", roles);
-        return "admin/new";
+        return "admin/create";
     }
 
-    @PostMapping(path = "/new")
+    @PostMapping(path = "/create")
     public String create(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model) {
         List<Role> roles = roleRepository.findAll();
         model.addAttribute("allRoles", roles);
         userValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
-            return "admin/new";
+            return "admin/create";
         }
         userService.add(user);
         return "redirect:/admin";
@@ -63,7 +62,7 @@ public class AdminController {
 
 
     @GetMapping("/delete")
-    public String usersId() {
+    public String deleteUser() {
         return "admin/delete";
     }
 
@@ -75,7 +74,7 @@ public class AdminController {
 
 
     @GetMapping("/{id}/update")
-    public String page(Model model, @PathVariable("id") long id) {
+    public String updateUser(Model model, @PathVariable("id") long id) {
         model.addAttribute("user", userService.getUser(id));
         List<Role> roles = roleRepository.findAll();
         model.addAttribute("allRoles", roles);
