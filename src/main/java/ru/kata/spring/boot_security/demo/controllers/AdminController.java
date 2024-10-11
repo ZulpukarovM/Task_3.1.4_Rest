@@ -86,8 +86,11 @@ public class AdminController {
     public String update(@PathVariable("id") long id, @ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model) {
         List<Role> roles = roleRepository.findAll();
         model.addAttribute("allRoles", roles);
-        userValidator.validate(user, bindingResult);
+        if(!userService.getUser(id).getFirstName().equals(user.getFirstName())) {
+            userValidator.validate(user, bindingResult);
+        }
         if (bindingResult.hasErrors()) {
+
             return "admin/update";
         }
         userService.update(id, user);

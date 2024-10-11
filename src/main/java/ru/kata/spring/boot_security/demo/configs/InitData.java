@@ -27,11 +27,11 @@ public class InitData {
 // создаю пользователя с именем и паролем admin
     @PostConstruct
     public void firstInit() {
-        if (userRepository.findByFirstName("admin") == null) {
+        if (userRepository.findByFirstName("admin").isEmpty()) {
             roleRepository.save(new Role("ROLE_USER"));
             roleRepository.save(new Role("ROLE_ADMIN"));
             Set<Role> roles = Set.of(roleRepository.getById(2L));
-            User user2 = new User(20L, "admin", "adminovich", 20, bCryptPasswordEncoder.encode("admin"), roles);
+            User user2 = new User("admin", "adminovich", 20, bCryptPasswordEncoder.encode("admin"), roles);
             user2.setId(20L);
             userRepository.save(user2);
         }

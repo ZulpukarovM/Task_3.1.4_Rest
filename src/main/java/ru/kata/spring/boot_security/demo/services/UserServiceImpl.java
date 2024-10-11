@@ -16,7 +16,7 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService{
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final UserRepository userRepository;
@@ -45,6 +45,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     @Override
     public void update(long id, User userToBeUpdated) {
+        if (userRepository.findById(id).isEmpty()) {
+            throw new EntityNotFoundException("User not found");
+        }
+        if (!userRepository.getById(id).getPassword().equals(userToBeUpdated.getPassword())) {
+            userToBeUpdated.setPassword(bCryptPasswordEncoder.encode(userToBeUpdated.getPassword()));
+        }
+
         userToBeUpdated.setId(id);
         userRepository.save(userToBeUpdated);
     }
@@ -52,6 +59,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     @Override
     public void delete(long id) {
+        if (userRepository.findById(id).isEmpty()) {
+            throw new EntityNotFoundException("User not found");
+        }
         userRepository.deleteById(id);
     }
 
@@ -59,13 +69,5 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
-
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        return userRepository.findByFirstName(username).orElseThrow(()->new UsernameNotFoundException("User not found"));
-    }
-
 
 }
