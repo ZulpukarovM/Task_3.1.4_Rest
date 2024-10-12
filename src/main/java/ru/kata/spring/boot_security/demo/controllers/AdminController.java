@@ -13,7 +13,6 @@ import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 import ru.kata.spring.boot_security.demo.services.UserService;
-import ru.kata.spring.boot_security.demo.util.UserValidator;
 
 import java.security.Principal;
 import java.util.List;
@@ -35,7 +34,9 @@ public class AdminController {
     @GetMapping()
     public String getAllUsers(Model model, Principal principal) {
         List<User> allUsers = userService.getAllUsers();
-        model.addAttribute("user", userRepository.findByFirstName(principal.getName()).get());
+        if (userRepository.findByFirstName(principal.getName()).isPresent()) {
+            model.addAttribute("user", userRepository.findByFirstName(principal.getName()).get());
+        }
         model.addAttribute("allUsers", allUsers);
         return "admin/users";
     }

@@ -24,7 +24,7 @@ public class InitData {
         this.userRepository = userRepository;
     }
 
-// создаю пользователя с именем и паролем admin
+    // создаю пользователя с именем и паролем admin
     @PostConstruct
     public void firstInit() {
         if (userRepository.findByFirstName("admin").isEmpty()) {
