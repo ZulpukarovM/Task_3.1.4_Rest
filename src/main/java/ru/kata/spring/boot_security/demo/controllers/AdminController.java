@@ -1,13 +1,16 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
@@ -17,8 +20,8 @@ import ru.kata.spring.boot_security.demo.services.UserService;
 import java.security.Principal;
 import java.util.List;
 
-@Controller
-@RequestMapping("/admin")
+@RestController
+@RequestMapping("/api/admin")
 public class AdminController {
 
     private final RoleRepository roleRepository;
@@ -32,38 +35,42 @@ public class AdminController {
     }
 
     @GetMapping()
-    public String getAllUsers(Model model, Principal principal) {
+    public ResponseEntity<List<User>> getAllUsers(Model model, Principal principal) {
         List<User> allUsers = userService.getAllUsers();
         if (userRepository.findByFirstName(principal.getName()).isPresent()) {
             model.addAttribute("user", userRepository.findByFirstName(principal.getName()).get());
         }
         model.addAttribute("allUsers", allUsers);
-        return "admin/users";
+        return new ResponseEntity<>(allUsers, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUser(@PathVariable long id){
+        User user = userService.getUser(id);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
 
     @PostMapping(path = "/create")
-    public String create(@ModelAttribute("user") User user, Model model) {
-        List<Role> roles = roleRepository.findAll();
-        model.addAttribute("allRoles", roles);
+    public ResponseEntity<Void> create(@RequestBody User user) {
+
         userService.add(user);
-        return "redirect:/admin";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
-    @PostMapping("/delete")
-    public String delete(@RequestParam("id") Long id) {
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         userService.delete(id);
-        return "redirect:/admin";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
-    @PostMapping("/{id}")
-    public String update(@PathVariable("id") long id, @ModelAttribute("user") User user, Model model) {
-        List<Role> roles = roleRepository.findAll();
-        model.addAttribute("allRoles", roles);
+
+    @PostMapping("/update/{id}")
+    public ResponseEntity<User> update(@RequestBody User user, @PathVariable("id") Long id) {
         userService.update(id, user);
-        return "redirect:/admin";
+        return new ResponseEntity<>(user, HttpStatus.OK);
 
     }
 
