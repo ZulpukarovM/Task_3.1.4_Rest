@@ -148,7 +148,7 @@ document.getElementById('editUserForm').addEventListener('submit', function (eve
     };
     console.log('Updating user:', user);
     fetch(`api/admin/update/${userId}`, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -196,7 +196,7 @@ function openDeleteModal(userId) {
             openModal('deleteUserModal');
 
             document.getElementById('confirmDeleteButton').onclick = function () {
-                 deleteUser(user.id);
+                deleteUser(user.id);
             };
         })
         .catch(error => console.error('Ошибка:', error));
@@ -204,8 +204,8 @@ function openDeleteModal(userId) {
 
 function deleteUser(userId) {
     if (confirm('Вы уверены, что хотите удалить этого пользователя?')) {
-         fetch(`api/admin/delete/${userId}`, {
-            method: 'POST'
+        fetch(`api/admin/delete/${userId}`, {
+            method: 'DELETE'
         })
             .then(response => {
                 console.log('Ответ от сервера:', response);
@@ -213,8 +213,8 @@ function deleteUser(userId) {
                     throw new Error('Не удалось удалить пользователя');
                 }
                 console.log('Пользователь успешно удален');
-                // fetchAllUsers();
-                // fetchCurrentUser();
+                fetchAllUsers();
+                fetchCurrentUser();
                 $('#deleteUserModal').modal('hide');
             })
 

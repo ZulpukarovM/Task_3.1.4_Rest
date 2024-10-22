@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@AllArgsConstructor
+import java.util.List;
+
 @Getter
 @Setter
-public class ErrorResponse {
-    private String message;
-    private long timestamp;
+@AllArgsConstructor
+public class ValidationErrorResponse {
+
+    private final List<Violation> violationList;
 
 }
